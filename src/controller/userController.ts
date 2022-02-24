@@ -1,18 +1,19 @@
-import { Register_condition } from "../type";
-import { Context, Next } from "koa";
-import UserService from "../service/userService";
+import { Context } from "koa";
+import { createUser } from "../service/userService";
 
-const { createUser } = UserService
-const UserController = (() => {
-    async function register(ctx:Context, next:Next) {
-        const { user_name, password } = <Register_condition>ctx.request.body;
-        const res = await createUser(user_name, password)
-        ctx.body = ctx.request.body;
-    }
-    async function login(ctx:any, next:Next) {
-        ctx.body = "登陆成功"
-    }
-    return {register, login}
-})()
+export async function register(ctx: Context) {
+  const { user_name, password } = <Record<string, string>>ctx.request.body;
 
-export default UserController
+  const res = await createUser(user_name, password);
+  ctx.status = 200;
+  ctx.body = {
+    stat: "OK",
+    data: {
+      message: "用户注册成功",
+      _id: res._id,
+    },
+  };
+}
+export async function login(ctx: Context) {
+  ctx.body = "登陆成功";
+}

@@ -1,7 +1,8 @@
 import * as dotenv from 'dotenv'
+import { Env } from '../type'
 
 dotenv.config()
 
-const CONFIG = process.env
+const CONFIG = <Env>process.env
 
 export default CONFIG
