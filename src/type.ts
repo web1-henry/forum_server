@@ -7,10 +7,17 @@ export interface Env extends NodeJS.ProcessEnv {
   MYSQL_USER: string;
   MYSQL_PWD: string;
   MYSQL_DB: string;
+  JWT_SECRET: string;
 }
 
 export interface Result<T> extends Model {
   dataValues: T;
+}
+
+export interface UserSearchCondition {
+  user_name?: string;
+  _id?: string;
+  admin?: boolean;
 }
 
 export interface Error {

@@ -1,4 +1,16 @@
 ### 服务端部分
 - 1. 框架:Koa2
 - 2. 语言:TypeScript
-- 3. 目录结构 ...
+- 3. 目录结构 
+    - app  http业务部分
+    - config  配置文件
+    - constant  静态文件
+    - controller  控制器：相关执行方法
+    - db  数据库服务启动
+    - middleware  中间件
+    - model  定义数据表
+    - routes  路由匹配
+    - service  操作数据库方法并返回结果
+    - lib  公共函数
+    - main  服务启动入口
+    - type  类型定义

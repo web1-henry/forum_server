@@ -1,5 +1,7 @@
 import { Context } from "koa";
 import { Error } from "../type";
+
+// 错误处理函数
 export const errHandler = (err: Error, ctx: Context) => {
   let status = 500;
   switch (err.code) {

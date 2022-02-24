@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import seq from "../db/seq";
 
+//User数据表定义
 const User = seq.define("forum_user", {
   _id: {
     allowNull: false,
@@ -27,6 +28,6 @@ const User = seq.define("forum_user", {
   },
 });
 
-User.sync({ force: true });
+User.sync();
 
 export default User

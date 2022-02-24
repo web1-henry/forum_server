@@ -7,6 +7,7 @@ const app = new Koa();
 
 app.use(KoaBody()).use(userRouter.routes());
 
+//统一的错误处理
 app.on("error", errHandler);
 
 export default app;
