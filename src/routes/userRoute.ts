@@ -17,6 +17,6 @@ router.post("/register", userValidator, varifyRegister, cryptPassword, register)
 router.post("/login", userValidator, varifyLogin, login);
 
 //修改密码路由
-router.patch("/update", auth , update)
+router.patch("/update", auth, cryptPassword, update)
 
 export default router;

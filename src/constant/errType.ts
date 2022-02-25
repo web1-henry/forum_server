@@ -41,3 +41,13 @@ export const updatePwdError = {
   code: "10201",
   message: "修改密码失败"
 }
+
+export const oldPasswordError = {
+  code: "10202",
+  message: "原密码不正确"
+}
+
+export const samePasswordError = {
+  code: "10203",
+  message: "新密码不能与旧密码相同"
+}

@@ -14,10 +14,15 @@ export interface Result<T> extends Model {
   dataValues: T;
 }
 
+
 export interface UserSearchCondition {
   user_name?: string;
   _id?: string;
   admin?: boolean;
+}
+
+export interface UserPassword {
+  password:string;
 }
 
 export interface Error {

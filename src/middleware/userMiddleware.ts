@@ -7,8 +7,9 @@ import {
   userLoginError,
   userPwdError,
 } from "../constant/errType";
-import { getUserInfo } from "../service/userService";
+import { getUserInfo, getUserPassword } from "../service/userService";
 import * as bcrypt from "bcryptjs";
+import { UserData } from "../type";
 
 //验证合法性
 export const userValidator = async (ctx: Context, next: Next) => {
@@ -28,7 +29,7 @@ export const varifyRegister = async (ctx: Context, next: Next) => {
   const { user_name } = <Record<string, string>>ctx.request.body;
   //合理性
   try {
-    if (await getUserInfo({user_name})) {
+    if (await getUserInfo({ user_name })) {
       console.error("用户已经存在", { user_name });
       ctx.app.emit("error", userAlreadyExisted, ctx);
       ctx.status = 409; //409表示有冲突
@@ -61,7 +62,8 @@ export const varifyLogin = async (ctx: Context, next: Next) => {
 
   // 首先查询用户信息，看用户名是否存在
   try {
-    const res = await getUserInfo({user_name});
+    const { _id } = (await getUserInfo({ user_name })) as UserData;
+    const res = await getUserPassword(_id);
     
     if (!res) {
       console.error("该用户不存在", user_name);
@@ -69,7 +71,7 @@ export const varifyLogin = async (ctx: Context, next: Next) => {
       return;
     }
     //再验证密码是否一致
-    if (!bcrypt.compareSync(password, res.password)) {
+    if (!varifyPassword(password, res.password)) {
       ctx.app.emit("error", userPwdError, ctx);
       return;
     }
@@ -80,4 +82,9 @@ export const varifyLogin = async (ctx: Context, next: Next) => {
   }
 
   await next();
+};
+
+//验证密码是否一致
+export const varifyPassword = async (o: string, n: string) => {
+  return bcrypt.compareSync(o, n);
 };
