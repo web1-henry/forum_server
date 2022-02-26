@@ -2,6 +2,7 @@ import { Context } from "koa";
 import * as jwt from "jsonwebtoken";
 import {
   oldPasswordError,
+  samePasswordError,
   updatePwdError,
   useregisterError,
 } from "../constant/errType";
@@ -14,13 +15,15 @@ import {
 import { UserData, UserPassword } from "../type";
 import CONFIG from "../config/default";
 import { varifyPassword } from "../middleware/userMiddleware";
+import { cryptPassword } from "../lib";
 
 //注册方法
 export async function register(ctx: Context) {
   const { user_name, password } = <Record<string, string>>ctx.request.body;
+  const hash = cryptPassword(password);
 
   try {
-    const res = await createUser(user_name, password);
+    const res = await createUser(user_name, hash);
     ctx.status = 200;
     ctx.body = {
       stat: "OK",
@@ -56,16 +59,22 @@ export async function login(ctx: Context) {
 export async function update(ctx: Context) {
   try {
     const { _id } = ctx.state.user;
-    const { oldPassword } = ctx.request.body;
+    const { oldPassword, newPassword } = ctx.request.body;
     const { password } = (await getUserPassword(_id)) as UserPassword;
-    const varifyres = await varifyPassword(oldPassword, password);
-    if (!varifyres) {
+    const oldVarifyres = await varifyPassword(oldPassword, password);
+    const newVarifyres = await varifyPassword(newPassword, password);
+    if (!oldVarifyres) {
       console.error("原密码不正确", { oldPassword });
       ctx.app.emit("error", oldPasswordError, ctx);
       return;
     }
-    const newPassword = ctx.request.body.password;
-    const res = await updateUserInfo({ password }, { password: newPassword });
+    if (newVarifyres) {
+      console.log("新密码不能与旧密码相同", { newPassword });
+      ctx.app.emit("error", samePasswordError, ctx);
+      return;
+    }
+    const n = cryptPassword(newPassword);
+    const res = await updateUserInfo({ password }, { password: n });
     if (!res) {
       console.error("修改密码失败", { oldPassword });
       ctx.app.emit("error", updatePwdError, ctx);

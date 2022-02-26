@@ -44,18 +44,6 @@ export const varifyRegister = async (ctx: Context, next: Next) => {
   await next();
 };
 
-//密码加密
-export const cryptPassword = async (ctx: Context, next: Next) => {
-  const { password } = ctx.request.body;
-
-  const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(password, salt); //密文
-
-  ctx.request.body.password = hash;
-
-  await next();
-};
-
 //验证登陆
 export const varifyLogin = async (ctx: Context, next: Next) => {
   const { user_name, password } = <Record<string, string>>ctx.request.body;
@@ -64,7 +52,7 @@ export const varifyLogin = async (ctx: Context, next: Next) => {
   try {
     const { _id } = (await getUserInfo({ user_name })) as UserData;
     const res = await getUserPassword(_id);
-    
+
     if (!res) {
       console.error("该用户不存在", user_name);
       ctx.app.emit("error", userNotExist, ctx);
