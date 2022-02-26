@@ -6,6 +6,7 @@ export const checkPassword = (password: string) => {
   return bcrypt.compareSync(password, CONFIG.JWT_SECRET);
 };
 
+//密码加密
 export const cryptPassword = (password: string) => {
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(password, salt);

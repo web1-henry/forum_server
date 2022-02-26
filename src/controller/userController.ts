@@ -52,7 +52,7 @@ export async function login(ctx: Context) {
       },
     };
   } catch (err) {
-    console.error("用户登陆书失败", err);
+    console.error("用户登陆失败", err);
   }
 }
 //修改密码
@@ -78,6 +78,7 @@ export async function update(ctx: Context) {
     if (!res) {
       console.error("修改密码失败", { oldPassword });
       ctx.app.emit("error", updatePwdError, ctx);
+      return;
     }
     ctx.body = {
       stat: "OK",
