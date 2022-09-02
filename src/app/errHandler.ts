@@ -11,6 +11,12 @@ export const errHandler = (err: Error, ctx: Context) => {
     case "10002":
       status = 409;
       break;
+    case "10101":
+      status = 401;
+      break;
+    case "10102":
+      status = 401;
+      break;
     default:
       status = 500;
   }
